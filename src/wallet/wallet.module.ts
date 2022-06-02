@@ -7,10 +7,12 @@ import { User } from 'src/entities/user.entity';
 import { Cash } from 'src/entities/wallet/cash.entity';
 import { OrderDetail } from 'src/entities/checkout/orderdeatil.entity';
 import { Order } from 'src/entities/checkout/order.entity';
+import { UserService } from 'src/user/user.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Course,User,Cash,OrderDetail,Order])],
   controllers: [WalletController],
-  providers: [WalletService]
+  providers: [WalletService,UserService,JwtService]
 })
 export class WalletModule {}

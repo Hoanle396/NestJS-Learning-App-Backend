@@ -34,6 +34,9 @@ export class CourseService {
   async findAll(): Promise<Course[]> {
     return await this.courseRepository.find();
   }
+  async find(search: string): Promise<Course[]>{
+    return await this.courseRepository.createQueryBuilder("course").where("course.title LIKE :search OR course.description LIKE :search",{search:`%${search}%`}).getMany()
+  }
 
   async findOne(id: number): Promise<Course>{
     return await this.courseRepository.findOne({where: {id: id},

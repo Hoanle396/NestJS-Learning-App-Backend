@@ -48,6 +48,11 @@ export class CourseController {
     return this.courseService.findOne(+id);
   }
 
+  @Get('/search/:search')
+  async search(@Param('search') search: string) {
+    return await this.courseService.find(search)
+  }
+
   @UseGuards(JwtAuthGuard)
   @UseGuards(RoleGuard(Role.Admin))
   @Patch(':id')
