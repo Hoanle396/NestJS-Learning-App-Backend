@@ -18,17 +18,36 @@ export class WalletController {
   @UseGuards(RoleGuard(Role.User))
   @Post()
   async checkout(@Body() orderDto: OrderDto,@Request() req,@Res() res:Response) {
-    const {money}=await this.userService.findOne(req.user.email);
-    if(money<=0||money<orderDto.fee){
+    const user=await this.userService.findOne(req.user.email);
+    if(user.money<=0||user.money<orderDto.fee){
       return res.status(HttpStatus.BAD_REQUEST).json({statusCode: 400,message:"Insufficient balance. Please add more money to your wallet"})
     }
     else{
-      const result = await this.walletService.buyCourse(orderDto,req.user,money)
+      const result = await this.walletService.buyCourse(orderDto,user,user.money-orderDto.fee)
       if(result){
        return res.status(HttpStatus.OK).json({statusCode: 200,message:"Success to buy the course"})
       }
       else {
         return res.status(HttpStatus.FAILED_DEPENDENCY).json({statusCode: 424,message:"Fail to buy the course"})
+      }
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RoleGuard(Role.User))
+  @Post('/transfer')
+  async transfer(@Body() wallet: CreateWalletDto,@Request() req,@Res() res:Response) {
+    const user=await this.userService.findOne(req.user.email);
+    if(user.money<=0||user.money<wallet.amount){
+      return res.status(HttpStatus.BAD_REQUEST).json({statusCode: 400,message:"Insufficient balance. Please add more money to your wallet"})
+    }
+    else{
+      const result = await this.walletService.transfer(wallet,user,user.money-wallet.amount)
+      if(result){
+       return res.status(HttpStatus.OK).json({statusCode: 200,message:"Success to transfer"})
+      }
+      else {
+        return res.status(HttpStatus.FAILED_DEPENDENCY).json({statusCode: 424,message:"Fail to transfer"})
       }
     }
   }

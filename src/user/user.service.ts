@@ -18,11 +18,11 @@ export class UserService {
     private jwtService: JwtService,
   ) {}
 
-  findAll(): Promise<User[]> {
-    return this.usersRepository.find();
+  async findAll(): Promise<User[]> {
+    return await this.usersRepository.find();
   }
-  findOne(email: string): Promise<User> {
-    return this.usersRepository.findOne({where: {email: email}});
+  async findOne(email: string): Promise<User> {
+    return await this.usersRepository.findOne({where: {email: email}});
   }
  
   findBy(data:Object): Promise<User[]> {

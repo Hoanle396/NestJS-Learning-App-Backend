@@ -5,6 +5,7 @@ import {
   OneToMany,
   OneToOne,
   JoinColumn,
+  CreateDateColumn,
 } from 'typeorm';
 import { CourseDetail } from './coursedetail.entity';
 import { Rate } from './rate.entity';
@@ -29,6 +30,9 @@ export class Course {
 
   @Column()
   background: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
 
   @OneToOne(() => Rate)
   @JoinColumn()

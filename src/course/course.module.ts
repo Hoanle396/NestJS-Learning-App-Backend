@@ -6,9 +6,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Rate } from 'src/entities/rate.entity';
 import { Trending } from 'src/entities/trending.entity';
 import { CourseDetail } from 'src/entities/coursedetail.entity';
+import { OrderDetail } from 'src/entities/checkout/orderdeatil.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Course,Rate,Trending,CourseDetail])],
+  imports: [TypeOrmModule.forFeature([Course,Rate,Trending,CourseDetail,OrderDetail])],
   controllers: [CourseController],
   providers: [CourseService]
 })
