@@ -8,28 +8,27 @@ import { UpdateGiftDto } from './dto/update-gift.dto';
 
 @Injectable()
 export class GiftService {
-  constructor(@InjectRepository(GiftVoucher) private giftRep:Repository<GiftVoucher>){
-
+  constructor(
+    @InjectRepository(GiftVoucher) private giftRep: Repository<GiftVoucher>,
+  ) {}
+  async create(createGiftDto: CreateGiftDto) {
+    createGiftDto.startDate = new Date(createGiftDto.startDate);
+    createGiftDto.endDate = new Date(createGiftDto.endDate);
+    return await this.giftRep.save(createGiftDto);
   }
-  create(createGiftDto: CreateGiftDto) {
-    return 'This action adds a new gift';
+  async gift(body: CheckGift): Promise<GiftVoucher> {
+    return await this.giftRep.findOne({ where: { giftcode: body.giftcode } });
   }
-  async gift(body:CheckGift): Promise<GiftVoucher>{
-    return  await this.giftRep.findOne({where:{giftcode:body.giftcode}})
-  }
-  findAll() {
-    return `This action returns all gift`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} gift`;
+  async findAll() {
+    return await this.giftRep.find();
   }
 
-  update(id: number, updateGiftDto: UpdateGiftDto) {
-    return `This action updates a #${id} gift`;
+  async remove(id: number) {
+    return await this.giftRep.delete(id);
   }
-
-  remove(id: number) {
-    return `This action removes a #${id} gift`;
+  async findWork(){
+    const now = new Date();
+    const data= await this.giftRep.createQueryBuilder('giftvoucher').where("giftvoucher.startDate < :now and giftvoucher.endDate > :now", { now: now }) .getMany();
+    return data
   }
 }

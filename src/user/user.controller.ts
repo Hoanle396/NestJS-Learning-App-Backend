@@ -14,6 +14,8 @@ import { Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { LocalAuthGuard } from 'src/auth/local-auth.guard';
+import { Role } from 'src/role/role.enum';
+import RoleGuard from 'src/role/roles.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { GoogleUserDto } from './dto/google-user.dto';
 import { UserService } from './user.service';
@@ -59,7 +61,6 @@ export class UserController {
     try {
       const data = await this.userService.logingoogle(createUserDto);
       if (data) {
-        console.log(data);
         return res.status(HttpStatus.OK).send(data);
       } else {
         return res
@@ -78,8 +79,15 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
+  async getProfile(@Request() req) {
+    const data  = await this.userService.findOne(
+      req.user.email,
+    );
+    if(data) {
+      const { password, ...result}=data;
+      return result;
+    }
+    return new UnauthorizedException(); 
   }
 
   @UseGuards(LocalAuthGuard)
@@ -88,5 +96,12 @@ export class UserController {
     if (req.user.roles == 'admin') {
       return this.authService.login(req.user);
     } else throw new UnauthorizedException();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RoleGuard(Role.Admin))
+  @Get('/all')
+  async getCustomer() {
+    return await this.userService.findAll();
   }
 }

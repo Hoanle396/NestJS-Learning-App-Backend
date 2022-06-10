@@ -13,6 +13,6 @@ export class MycourseService {
 
     async getmycourse(users:User){
       // return await this.course.find({where:{user:users},relations:{course:true}})
-      return await this.course.createQueryBuilder("orderdeatils").leftJoinAndSelect('orderdeatils.course','course').where("orderdeatils.user = :id", { id: users.id }) .getMany();
+      return await this.course.createQueryBuilder("orderdeatils").leftJoinAndSelect('orderdeatils.course','course').where("orderdeatils.user = :id", { id: users.id }).getMany();
     } 
 }
