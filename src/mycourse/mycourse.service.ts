@@ -9,10 +9,16 @@ import { UpdateMycourseDto } from './dto/update-mycourse.dto';
 
 @Injectable()
 export class MycourseService {
-   constructor(@InjectRepository(OrderDetail) private course:Repository<OrderDetail>){}
+  constructor(
+    @InjectRepository(OrderDetail) private course: Repository<OrderDetail>,
+  ) {}
 
-    async getmycourse(users:User){
-      // return await this.course.find({where:{user:users},relations:{course:true}})
-      return await this.course.createQueryBuilder("orderdeatils").leftJoinAndSelect('orderdeatils.course','course').where("orderdeatils.user = :id", { id: users.id }).getMany();
-    } 
+  async getmycourse(users: User) {
+    // return await this.course.find({where:{user:users},relations:{course:true}})
+    return await this.course
+      .createQueryBuilder('orderdeatils')
+      .leftJoinAndSelect('orderdeatils.course', 'course')
+      .where('orderdeatils.user = :id', { id: users.id })
+      .getMany();
+  }
 }

@@ -73,6 +73,11 @@ export class CourseService {
         trending: true,
         detail: true,
       },
+      order: {
+        detail: {
+          id: 'ASC',
+        },
+      },
     });
   }
 

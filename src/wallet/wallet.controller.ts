@@ -31,7 +31,6 @@ export class WalletController {
   @UseGuards(JwtAuthGuard)
   @Get('/cash')
   async getHistory(@Request() req, @Res() res: Response) {
-    console.log(req);
     let data = await this.walletService.getHistory(req.user);
     data = data.sort((a, b) => b.id - a.id);
     return res.status(HttpStatus.OK).send(data);
