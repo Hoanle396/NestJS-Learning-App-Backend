@@ -71,12 +71,13 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 
-#infomation
-# android app in react-native
+# infomation
+## android app in react-native
 
-# Learning app
+## Learning app
 
-#MORE
+# MORE
 
-https://user-images.githubusercontent.com/89791546/175993905-7aeabf79-95e9-4920-95f3-ff108c42cdf9.mp4
+[video](https://user-images.githubusercontent.com/89791546/175993905-7aeabf79-95e9-4920-95f3-ff108c42cdf9.mp4)
+
 Nest is [MIT licensed](LICENSE).
