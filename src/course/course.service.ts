@@ -43,9 +43,11 @@ export class CourseService {
 
   async findAll(): Promise<Course[]> {
     const course = await this.courseRepository.find();
+    const recommendCourse = this.recommendCourse(course);
+
     const time = new Date();
     let result = [];
-    for (let a of course) {
+    for (let a of recommendCourse) {
       let onec = await this.orderDetailRepository
         .createQueryBuilder('orderdetails')
         .where('orderdetails.course=:id', { id: a.id })
@@ -56,6 +58,12 @@ export class CourseService {
     }
     return result.sort((a, b) => b.count - a.count);
   }
+  
+  recommendCourse(course) {
+    const shuffledProducts = course.sort(() => 0.5 - Math.random());
+    return shuffledProducts.slice(0, 10);
+  }
+
   async find(search: string): Promise<Course[]> {
     return await this.courseRepository
       .createQueryBuilder('course')
