@@ -7,10 +7,21 @@ import { Rate } from 'src/entities/rate.entity';
 import { Trending } from 'src/entities/trending.entity';
 import { CourseDetail } from 'src/entities/coursedetail.entity';
 import { OrderDetail } from 'src/entities/checkout/orderdeatil.entity';
+import { PythonService } from './system.python.service';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Course,Rate,Trending,CourseDetail,OrderDetail])],
+  imports: [
+    ScheduleModule.forRoot(),
+    TypeOrmModule.forFeature([
+      Course,
+      Rate,
+      Trending,
+      CourseDetail,
+      OrderDetail,
+    ]),
+  ],
   controllers: [CourseController],
-  providers: [CourseService]
+  providers: [CourseService, PythonService],
 })
 export class CourseModule {}
