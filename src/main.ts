@@ -16,6 +16,7 @@ app.enableCors();
     .setTitle('Study App')
     .setDescription('The Study API description')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/', app, document);
@@ -24,6 +25,8 @@ app.enableCors();
 const afterMonth = new Date(new Date().setDate(new Date().getDate() + 30));
 const Now = new Date();
 Logger.verbose(Now, 'APPLICATION START AT');
+Logger.verbose(`http://localhost:${3000}`, 'APPLICATION START AT');
+
 // console.log(afterMonth)
 // console.log(afterMonth.getTime()/60000-Now.getDate()/60000)
 
