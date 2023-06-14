@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -36,7 +37,7 @@ export class CourseService {
     private pythonService: PythonService,
   ) {}
 
-  @Cron('0 0 * * * *')
+  @Cron('0 0 * * *')
   async handleCron() {
     Logger.verbose(new Date(), 'CRONJOB START AT');
 
@@ -97,7 +98,7 @@ export class CourseService {
   async find(search: string): Promise<Course[]> {
     return await this.courseRepository
       .createQueryBuilder('course')
-      .where('course.title LIKE :search OR course.description LIKE :search', {
+      .where('course.title ILIKE :search OR course.description ILIKE :search', {
         search: `%${search}%`,
       })
       .getMany();
@@ -132,5 +133,24 @@ export class CourseService {
   }
   async createlession(creatLessionDto: creatLessionDto) {
     return await this.detailRepository.insert(creatLessionDto);
+  }
+  async rewriteUrl(current: string, url: string) {
+    const courses = await this.courseRepository.find();
+    return await Promise.all(
+      courses.map(async (course) => {
+        try {
+          const newCourse = course;
+          if (course.image.includes(current)) {
+            newCourse.image = course.image.replace(current, url);
+            await this.courseRepository.update(course.id, newCourse);
+            return { id: course.id, status: 'ok' };
+          } else {
+            throw new BadRequestException();
+          }
+        } catch (e) {
+          throw new BadRequestException();
+        }
+      }),
+    );
   }
 }

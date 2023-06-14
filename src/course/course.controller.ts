@@ -1,25 +1,24 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
-  UseInterceptors,
+  Get,
+  Param,
+  Patch,
+  Post,
   UploadedFile,
   UseGuards,
-  Request,
+  UseInterceptors
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Role } from 'src/role/role.enum';
-import { Roles } from 'src/role/roles.decorator';
 import RoleGuard from 'src/role/roles.guard';
 import { course } from 'src/utils/upload';
 import { CourseService } from './course.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { creatLessionDto } from './dto/create-lession.dto';
+import { RewriteUrl } from './dto/rewrite-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 
 @Controller('/api/course')
@@ -32,9 +31,11 @@ export class CourseController {
   @UseInterceptors(FileInterceptor('files', { storage: course }))
   create(
     @Body() createCourseDto: CreateCourseDto,
-    @UploadedFile() file: Express.Multer.File
+    @UploadedFile() file: Express.Multer.File,
   ) {
-    createCourseDto.image = process.env.APP_HOST +"uploads/course/"+ file.filename;
+    createCourseDto.image =
+      process.env.APP_HOST + 'uploads/course/' + file.filename;
+
     return this.courseService.create(createCourseDto);
   }
 
@@ -50,7 +51,7 @@ export class CourseController {
 
   @Get('/search/:search')
   async search(@Param('search') search: string) {
-    return await this.courseService.find(search)
+    return await this.courseService.find(search);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -76,7 +77,12 @@ export class CourseController {
   @UseGuards(JwtAuthGuard)
   @UseGuards(RoleGuard(Role.Admin))
   @Post('lession')
-  createlession(@Body() creatLessionDto: creatLessionDto,) {
+  createlession(@Body() creatLessionDto: creatLessionDto) {
     return this.courseService.createlession(creatLessionDto);
+  }
+
+  @Post('rewrite')
+  rewriteUrl(@Body() url: RewriteUrl) {
+    return this.courseService.rewriteUrl(url.current, url.url);
   }
 }
