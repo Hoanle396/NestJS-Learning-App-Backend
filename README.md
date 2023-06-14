@@ -54,9 +54,6 @@ $ yarn start:prod
 
 ```bash
 
-```
-
-
 DATABASE_USER=postgres
 DATABASE_PASSWORD=postgres
 DATABASE_DBNAME=postgres
@@ -66,10 +63,6 @@ GOOGLE_SECRET=<your google secret>
 
 
 APP_HOST=http://127.0.0.1:3000/
-
-```
-
-```
 
 ```
 
